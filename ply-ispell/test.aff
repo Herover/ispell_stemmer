@@ -1,1 +1,44 @@
-flag *A:
+# Konsonantfordobling og tilføjelse af -et og -ets, brugt til:
+# - bestemt form af navneord i intetkøn
+# Eksempel: øl -> øllet & øllets
+flag *E:
+	D		>	DET
+	D		>	DETS
+	F		>	FET
+	F		>	FETS
+        G       	>       GET
+        G       	>       GETS
+	K		>	KET
+	K		>	KETS
+	L		>	LET
+	L		>	LETS
+	M		>	MET
+	M		>	METS
+	N		>	NET
+	N		>	NETS
+	P		>	PET
+	P		>	PETS
+	R		>	RET
+	R		>	RETS
+	S		>	SET
+	S		>	SETS
+	T		>	TET
+	T		>	TETS
+
+flag *a:
+	E		>	LSE
+	E		>	LSEN
+	E		>	LSENS
+	E		>	LSES
+	E		>	LSER
+	E		>	LSERNE
+	E		>	LSERNES
+	E		>	LSERS
+	[IOUYÅ]		>	ELSE
+	[IOUYÅ]		>	ELSEN
+	[IOUYÅ]		>	ELSENS
+	[IOUYÅ]		>	ELSES
+	[IOUYÅ]		>	ELSER
+	[IOUYÅ]		>	ELSERNE
+	[IOUYÅ]		>	ELSERNES
+	[IOUYÅ]		>	ELSERS
