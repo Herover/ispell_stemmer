@@ -132,10 +132,9 @@ with codecs.open("../corpa/ispell/dansk.ispell", "r", encoding="utf-8", errors="
                         # print(cond)
                         if cond[1] == "":
                             thelist[parts[0] + cond[2]] = parts[0]
-        else:
-            #thelist[parts[0]] = parts[0]
-            1+1
-
+        
+        thelist[parts[0]] = parts[0]
+        
 from collections import OrderedDict
 orderedlist = OrderedDict(sorted(thelist.items()))
 print(orderedlist)
