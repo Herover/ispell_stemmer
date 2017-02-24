@@ -41,23 +41,23 @@ def t_flag_NAME(t):
     r'[a-zA-Z]'
     #print("flag name", t)
     #t.lexer.begin('INITIAL')
-    flags[t.value] = []
-    flags["curflag"] = t.value
+    #flags[t.value] = []
+    #flags["curflag"] = t.value
     curflag = t.value # ??
     return t
 
 # TODO: Turn each "field" into token?
 def t_flag_CONDITION(t):
     r'[\t\s]+.+[\t\s]+\>[\t\s].+\n'
-    split = re.split(r'[\t\s]+', t.value)
-    cond = split[1]
-    append = split[3]
-    appendsplit = re.split(r'\,', append)
-    strip = ""
-    if not len(appendsplit) == 1:
-        append = appendsplit[1]
-        strip = appendsplit[0]
-    flags[flags["curflag"]].append((cond.lower(), strip.lower(), append.lower()))
+    #split = re.split(r'[\t\s]+', t.value)
+    #cond = split[1]
+    #append = split[3]
+    #appendsplit = re.split(r'\,', append)
+    #strip = ""
+    #if not len(appendsplit) == 1:
+    #    append = appendsplit[1]
+    #    strip = appendsplit[0]
+    #flags[flags["curflag"]].append((cond.lower(), strip.lower(), append.lower()))
     return t
 
 def t_flag_BLANK(t):
@@ -107,6 +107,8 @@ lexer = lex.lex()
 
 with codecs.open("../corpa/ispell/dansk.aff", "r", encoding="utf-8", errors="backslashreplace") as input_file:
     content = input_file.read()
+
+    flag = ""
     
     lexer.input(content)
     while True:
@@ -114,7 +116,20 @@ with codecs.open("../corpa/ispell/dansk.aff", "r", encoding="utf-8", errors="bac
         if not tok:
             break
         # TODO: Move some logic from lexer to here
-        # print(tok)
+        if tok.type == "NAME":
+            flag = tok.value
+            flags[flag] = []
+        elif tok.type == "CONDITION":
+            split = re.split(r'[\t\s]+', tok.value)
+            cond = split[1]
+            append = split[3]
+            appendsplit = re.split(r'\,', append)
+            strip = ""
+            if not len(appendsplit) == 1:
+                append = appendsplit[1]
+                strip = appendsplit[0]
+            flags[flag].append((cond.lower(), strip.lower(), append.lower()))
+    #print(flags)
 
 thelist = {}
 with codecs.open("../corpa/ispell/dansk.ispell", "r", encoding="utf-8", errors="backslashreplace") as input_file:
