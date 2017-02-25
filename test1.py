@@ -3,6 +3,7 @@ import os
 import sys
 import math
 from collections import OrderedDict
+from ply_ispell.ispell import ispell
 
 all_words = {} # frequencies of all words
 docs = 0
@@ -13,6 +14,10 @@ doc_numwords = {} # number of words in doc by filename
 doc_tf = {} # tf by filename
 corpa_idf = {} # idf by word
 doc_tfidf = {} # tfidf by filename
+
+spell = ispell()
+spell.readAffixFile("corpa/ispell/dansk.aff")
+spell.readWordFile("corpa/ispell/dansk.ispell")
 
 def shorten_word(word):
     sword = re.match("^.+((?=(e|er|erne|est|en|et|ene)))", word)
@@ -34,7 +39,9 @@ def frequency(file):
     
     for word in text_list:
         lword = word.lower()
-
+        baseword = spell.getBaseOfWord(lword)
+        if baseword != None:
+            lword = baseword[0] # :S
         if lword in words_dict:
             words_dict[lword] += 1
         else:
