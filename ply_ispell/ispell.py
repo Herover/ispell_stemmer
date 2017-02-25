@@ -11,8 +11,9 @@ class ispell:
     wordrelations = {}
 
     def __init__(self):
-        import ispell_tokrules
-        self.lexer = lex.lex(ispell_tokrules)
+        from .ispell_tokrules import ispell_tokrules
+        self.lexer = ispell_tokrules()
+        self.lexer.build()
 
     def readAffixFile(self, filename):
         with codecs.open(filename,
