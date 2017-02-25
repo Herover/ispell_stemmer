@@ -57,13 +57,38 @@ class ispell:
                 if len(parts) == 2:
                     for c in parts[1]:
                         for cond in self.flags[c]:
-                            # print(parts[0], cond[0])
-                            if parts[0].lower().endswith(cond[0]):
-                                # print(cond)
-                                if cond[1] == "":
-                                    self.wordrelations[parts[0] + cond[2]] = parts[0]
-        
-                self.wordrelations[parts[0]] = parts[0]
+                            if not cond[0].startswith("[") and (cond[0] == "." or parts[0].lower().endswith(cond[0])):
+                                part = parts[0] # TODO: naming
+                                if cond[1] != "":
+                                    remove = cond[1][1:]
+                                    # TODO: Fail or warn if remove is not the end of part
+                                    part = part[0:len(part) - len(remove)]
+                                self.insertWordRelation(part + cond[2], parts[0])
+                            elif cond[0].startswith("["):
+                                chars = cond[0][1:-1]
+                                endswith = True
+                                if chars.startswith("^"):
+                                    endswith = False
+                                    chars = chars[1:]
+                                for char in chars:
+                                    if parts[0].lower().endswith(char) == endswith:
+                                        self.insertWordRelation(parts[0] + cond[2], parts[0])
+                # Insert baseword and word without flags
+                self.insertWordRelation(parts[0], parts[0])
 
-
+    def insertWordRelation(self, word, baseword):
+        if word in self.wordrelations:
+            # Test if we have already inserted this relation
+            try:
+                self.wordrelations[word].index(baseword)
+            except:
+                self.wordrelations[word].append(baseword)
+        else:
+            self.wordrelations[word] = [baseword]
+    
+    def getBaseOfWord(self, word):
+        if word in self.wordrelations:
+            return self.wordrelations[word]
+        else:
+            return None
 

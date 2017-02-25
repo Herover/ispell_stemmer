@@ -21,7 +21,7 @@ t_ignore = ""
 
 def t_FLAG(t):
     #r'(?<=flag\s\*)[a-zA-Z](?=\:\n)'
-    r'flag\s\*'
+    r'flag\s'
     t.lexer.begin('flag')
 
 #t_flag_COLLON = r'\:'
@@ -30,7 +30,9 @@ def t_flag_COLLON(t):
     pass
 
 def t_flag_NAME(t):
-    r'[a-zA-Z]'
+    r'\*{0,1}[a-zA-Z]'
+    if t.value.startswith("*"):
+        t.value = t.value[1:]
     return t
 
 # TODO: Turn each "field" into token?
