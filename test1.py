@@ -2,7 +2,7 @@ import re
 import os
 import sys
 import math
-from collections import OrderedDict
+import codecs
 from ply_ispell.ispell import ispell
 
 all_words = {} # frequencies of all words
@@ -17,7 +17,7 @@ doc_tfidf = {} # tfidf by filename
 
 spell = ispell()
 spell.readAffixFile("corpa/ispell/dansk.aff")
-spell.readWordFile("corpa/ispell/dansk.ispell")
+spell.readWordFile("corpa/ispell/dansk.ispell", encoding = "iso-8859-1")
 
 def shorten_word(word):
     sword = re.match("^.+((?=(e|er|erne|est|en|et|ene)))", word)
@@ -28,7 +28,9 @@ def shorten_word(word):
     return sword
 
 def frequency(file):
-    fo = open(file)
+    fo = codecs.open(file,
+                     "r", encoding="utf-8",
+                     errors="backslashreplace")
     text = fo.read()
     words_dict = {}
     
@@ -36,16 +38,30 @@ def frequency(file):
     
     #print(re.split("\s*\.*\,*\n*|(<[\\]?[a-z])", text))
     text_list = re.split("[\s\.\,\"\:\;\'\(\)\?\!]+", text)
-    
+    known = 0
+    tot = 0    
     for word in text_list:
+        tot = tot + 1
+        # Ignore numbers
+        numbersearch = re.match(r'[0-9\,\.]+', word)
+        if numbersearch != None and numbersearch.group() == word:
+            continue
+
+        # Simplify words and turn everything into lowercase
         lword = word.lower()
         baseword = spell.getBaseOfWord(lword)
         if baseword != None:
-            lword = baseword[0] # :S
+            # TODO: if multiple possible basewords are returned, which one is
+            # the most correct?
+            lword = baseword[0]
+            known = known + 1
+        else:
+            print(lword + " ", end="")
         if lword in words_dict:
             words_dict[lword] += 1
         else:
             words_dict[lword] = 1
+    print("%i/%i" % (known, tot))
     return words_dict
 
 def tf(fn):
@@ -98,8 +114,10 @@ for fn in os.listdir(directory):
                 
 
 tfidf(filename)
-                
+
+from collections import OrderedDict
+from itertools import islice
 words_sorted = OrderedDict(sorted(doc_tfidf[filename].items(), key = lambda t: t[1]))
-print(words_sorted)
+print(OrderedDict(islice(words_sorted.items(), len(words_sorted) - 5, len(words_sorted))))
 
 print(len(sys.argv))

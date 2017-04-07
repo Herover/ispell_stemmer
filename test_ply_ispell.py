@@ -1,8 +1,9 @@
-import ispell
+from ply_ispell import ispell
 
 test = ispell.ispell()
-test.readAffixFile("../corpa/ispell/dansk.aff")
-test.readWordFile("../corpa/ispell/dansk.ispell")
+test.readAffixFile("corpa/ispell/dansk.aff")
+test.readWordFile("corpa/ispell/dansk.ispell", encoding="iso-8859-1")
+#test.readWordFile("test.ispell")
 #test.readAffixFile("../corpa/ispell/english.aff")
 #test.readWordFile("../corpa/ispell/american-insane.mwl")
 
@@ -23,6 +24,7 @@ print(test.getBaseOfWord("bilerne"))
 
 print(test.getBaseOfWord("nå"))
 print(test.getBaseOfWord("når"))
+print(test.getBaseOfWord("ø"))
 
 #print(test.getBaseOfWord("car"))
 #print(test.getBaseOfWord("cars"))

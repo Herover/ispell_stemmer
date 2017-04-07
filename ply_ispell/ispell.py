@@ -44,11 +44,12 @@ class ispell:
                         (cond.lower(), strip.lower(), append.lower())
                     )
     
-    def readWordFile(self, filename):
+    def readWordFile(self, filename, encoding = "utf-8"):
         with codecs.open(filename,
                          "r",
-                         encoding="utf-8",
-                         errors="backslashreplace") as input_file:
+                         encoding = encoding,
+                         errors="backslashreplace"
+        ) as input_file:
             while True:
                 line = input_file.readline()
                 if line == "":
@@ -60,11 +61,12 @@ class ispell:
                         for cond in self.flags[c]:
                             if not cond[0].startswith("[") and (cond[0] == "." or parts[0].lower().endswith(cond[0])):
                                 part = parts[0] # TODO: naming
+                                part = part.lower()
                                 if cond[1] != "":
                                     remove = cond[1][1:]
                                     # TODO: Fail or warn if remove is not the end of part
                                     part = part[0:len(part) - len(remove)]
-                                self.insertWordRelation(part + cond[2], parts[0])
+                                self.insertWordRelation(part + cond[2], parts[0].lower())
                             elif cond[0].startswith("["):
                                 chars = cond[0][1:-1]
                                 endswith = True
@@ -73,9 +75,9 @@ class ispell:
                                     chars = chars[1:]
                                 for char in chars:
                                     if parts[0].lower().endswith(char) == endswith:
-                                        self.insertWordRelation(parts[0] + cond[2], parts[0])
+                                        self.insertWordRelation(parts[0].lower() + cond[2], parts[0].lower())
                 # Insert baseword and word without flags
-                self.insertWordRelation(parts[0], parts[0])
+                self.insertWordRelation(parts[0].lower(), parts[0].lower())
 
     def insertWordRelation(self, word, baseword):
         if word in self.wordrelations:
