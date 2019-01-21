@@ -1,0 +1,1 @@
+from .ispell import ispell

@@ -1,0 +1,7 @@
+# Comment
+flag *A:
+	X		>	a
+	Y		>	a
+
+flag *B:
+	[XY]		>	b
