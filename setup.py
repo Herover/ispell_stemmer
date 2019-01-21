@@ -3,7 +3,7 @@ from setuptools import setup
 setup(name='ispell_stemmer',
       version='0.1',
       description='Stem words using ispell definitions',
-      url='',
+      url='https://github.com/Herover/ispell_stemmer',
       author='Herover',
       author_email='leon.l.a.nielsen@gmail.com',
       license='MIT',
